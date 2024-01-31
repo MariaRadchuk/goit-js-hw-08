@@ -67,28 +67,28 @@ const images = [
 const galleryContainer = document.querySelector('ul.gallery');
 images.forEach((image) => { 
     const item = document.createElement('li');
-    item.classList.add('gallery-item');
+    item.classList.add('gallery__item');
 
     const link = document.createElement('a');
-    link.classList.add9('gallery-link');
+    link.classList.add('gallery__link');
     link.href = image.original;
 
     const img = document.createElement('img');
-    img.classList.add('gallery-image');
+    img.classList.add('gallery__image');
     img.src = image.preview;
     img.dataset.source = image.original;
     img.alt = image.description;
 
-    link.appendChild('img');
-    item.appendChild('link');
-    galleryContainer.appendChild('item');
+    link.appendChild(img);
+    item.appendChild(link);
+    galleryContainer.appendChild(item);
 });
 
 galleryContainer.addEventListener('click', function (event) {
     event.preventDefault();
 
-    if (event.target.classList.contains('gallery-image')) {
-    const largeImageSource = event.target.dataset.source;
+    if (event.target.classList.contains('gallery__image')) {
+    largeImageSource = event.target.dataset.source;
     
     console.log('https://cdn.pixabay.com/photo/2019/05/14/16/43/rchids-4202820_1280.jpg', largeImageSource);
     }
