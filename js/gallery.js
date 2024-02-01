@@ -64,7 +64,11 @@ const images = [
   },
 ];
 
+
 const galleryContainer = document.querySelector('ul.gallery');
+let largeImageSource;
+let escapeKeyListener; // Оголошуємо змінну для слухача клавіші Escape
+
 images.forEach((image) => { 
     const item = document.createElement('li');
     item.classList.add('gallery__item');
@@ -88,22 +92,26 @@ galleryContainer.addEventListener('click', function (event) {
     event.preventDefault();
 
     if (event.target.classList.contains('gallery__image')) {
-    largeImageSource = event.target.dataset.source;
-    
-    console.log('https://cdn.pixabay.com/photo/2019/05/14/16/43/rchids-4202820_1280.jpg', largeImageSource);
+        largeImageSource = event.target.dataset.source;
+
+        console.log('https://cdn.pixabay.com/photo/2019/05/14/16/43/rchids-4202820_1280.jpg', largeImageSource);
+
+        const instance = basicLightbox.create(`
+            <img src="${largeImageSource}" width="800" height="600">
+        `);
+
+        instance.show();
+
+        if (escapeKeyListener) {
+            window.removeEventListener('keydown', escapeKeyListener);
+        }
+
+        escapeKeyListener = function (event) {
+            if (event.key === 'Escape') {
+                instance.close();
+            }
+        };
+
+        window.addEventListener('keydown', escapeKeyListener);
     }
-    
-    const instance = basicLightbox.create(`
-      <img src="${largeImageSource}" width="800" height="600">
-    `);
-
-    instance.show();
-
-        window.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape') {
-        instance.close();
-      }
-    });
-
 });
-
