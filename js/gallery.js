@@ -67,7 +67,7 @@ const images = [
 
 const galleryContainer = document.querySelector('ul.gallery');
 let largeImageSource;
-let escapeKeyListener; // Оголошуємо змінну для слухача клавіші Escape
+let escapeKeyListener; 
 
 images.forEach((image) => { 
     const item = document.createElement('li');
@@ -108,7 +108,7 @@ galleryContainer.addEventListener('click', function (event) {
 
         escapeKeyListener = function (event) {
             if (event.key === 'Escape') {
-                instance.close();
+              instance.close();
             }
         };
 
