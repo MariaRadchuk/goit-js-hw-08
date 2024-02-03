@@ -66,52 +66,56 @@ const images = [
 
 
 const galleryContainer = document.querySelector('ul.gallery');
-let largeImageSource;
-let escapeKeyListener; 
+let lightboxInstance;
 
-images.forEach((image) => { 
-    const item = document.createElement('li');
-    item.classList.add('gallery__item');
+images.forEach((image) => {
+  const item = document.createElement('li');
+  item.classList.add('gallery__item');
 
-    const link = document.createElement('a');
-    link.classList.add('gallery__link');
-    link.href = image.original;
+  const link = document.createElement('a');
+  link.classList.add('gallery__link');
+  link.href = image.original;
 
-    const img = document.createElement('img');
-    img.classList.add('gallery__image');
-    img.src = image.preview;
-    img.dataset.source = image.original;
-    img.alt = image.description;
+  const img = document.createElement('img');
+  img.classList.add('gallery__image');
+  img.src = image.preview;
+  img.dataset.source = image.original;
+  img.alt = image.description;
 
-    link.appendChild(img);
-    item.appendChild(link);
-    galleryContainer.appendChild(item);
+  link.appendChild(img);
+  item.appendChild(link);
+  galleryContainer.appendChild(item);
 });
 
 galleryContainer.addEventListener('click', function (event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    if (event.target.classList.contains('gallery__image')) {
-        largeImageSource = event.target.dataset.source;
+  if (event.target.classList.contains('gallery__image')) {
+    const largeImageSource = event.target.dataset.source;
 
-        console.log('https://cdn.pixabay.com/photo/2019/05/14/16/43/rchids-4202820_1280.jpg', largeImageSource);
-
-        const instance = basicLightbox.create(`
-            <img src="${largeImageSource}" width="800" height="600">
-        `);
-
-        instance.show();
-
-        if (escapeKeyListener) {
-            window.removeEventListener('keydown', escapeKeyListener);
-        }
-
-        escapeKeyListener = function (event) {
-            if (event.key === 'Escape') {
-              instance.close();
-            }
-        };
-
-        window.addEventListener('keydown', escapeKeyListener);
+    if (lightboxInstance) {
+      lightboxInstance.close();
     }
+
+    lightboxInstance = basicLightbox.create(`
+        <img src="${largeImageSource}" width="800" height="600">
+    `, {
+      onShow: () => {
+        window.addEventListener('keydown', escapeKeyListener);
+      },
+      onClose: () => {
+        window.removeEventListener('keydown', escapeKeyListener);
+        lightboxInstance = null;
+      }
+    });
+
+    lightboxInstance.show();
+  }
 });
+
+const escapeKeyListener = function (event) {
+  if (event.key === 'Escape') {
+    lightboxInstance.close();
+  }
+};
+
